@@ -42,40 +42,4 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDjLQcNCWcYWtBB8qKgW7UNAC6czd8jbIM',
-    appId: '1:352465460942:web:449d8c2ce8d2d313e2fa9f',
-    messagingSenderId: '352465460942',
-    projectId: 'fir-auth-7b61c',
-    authDomain: 'fir-auth-7b61c.firebaseapp.com',
-    storageBucket: 'fir-auth-7b61c.appspot.com',
-    measurementId: 'G-S32362LFL0',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAMG-kLD0f9M1x4dFJWpVtYcxj-q-vp8EA',
-    appId: '1:352465460942:android:3330477f42a900b7e2fa9f',
-    messagingSenderId: '352465460942',
-    projectId: 'fir-auth-7b61c',
-    storageBucket: 'fir-auth-7b61c.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDtHHeY4pEiCiU9-NGemxDt9Ms4C5Cjfbo',
-    appId: '1:352465460942:ios:9a3e4d814414eb9be2fa9f',
-    messagingSenderId: '352465460942',
-    projectId: 'fir-auth-7b61c',
-    storageBucket: 'fir-auth-7b61c.appspot.com',
-    iosBundleId: 'com.example.misLabs',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDtHHeY4pEiCiU9-NGemxDt9Ms4C5Cjfbo',
-    appId: '1:352465460942:ios:bd401487d03a43b2e2fa9f',
-    messagingSenderId: '352465460942',
-    projectId: 'fir-auth-7b61c',
-    storageBucket: 'fir-auth-7b61c.appspot.com',
-    iosBundleId: 'com.example.misLabs.RunnerTests',
-  );
 }
