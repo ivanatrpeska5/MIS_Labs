@@ -28,7 +28,12 @@ android {
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
+    defaultConfig {
+        multiDexEnabled true
+    }
+
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -66,7 +71,10 @@ flutter {
 }
 
 dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation(platform("com.google.firebase:firebase-bom:32.2.0")) // Use the latest version
     implementation("com.google.firebase:firebase-analytics")
     implementation 'com.android.support:multidex:1.0.3'
+    implementation("androidx.window:window:1.0.0")
+    implementation("androidx.window:window-java:1.0.0")
 }

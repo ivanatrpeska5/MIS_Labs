@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:mis_labs/auth/auth.dart';
 import 'package:mis_labs/page/register_page.dart';
-import '../domain/Exam.dart';
+
+import '../domain/exam.dart';
+import '../domain/notifications.dart';
+import 'calendar_page.dart';
 import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = '/home';
-
   final User? user = Auth().currentUser;
 
   Future<void> signOut(BuildContext context) async {
@@ -139,13 +141,13 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 setState(() {
                   if (newName.isNotEmpty) {
-                    _exams.add(
-                      Exam(
-                        id: _exams.length + 1,
-                        name: newName,
-                        dateTime: newDateTime,
-                      ),
+                    final newExam = Exam(
+                      id: _exams.length + 1,
+                      name: newName,
+                      dateTime: newDateTime,
                     );
+                    _exams.add(newExam);
+                    Notifications.sendImmediateNotification(newExam);
                   }
                   Navigator.pop(context);
                 });
@@ -167,39 +169,45 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
+              children: const [
+                Text("Exams"),
+                SizedBox(width: 8),
+              ],
+            ),
+            Row(
               children: [
-                const Text("Exams"),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CalendarPage(exams: _exams)),
+                    );
+                  },
+                  child: const Text('Calendar'),
+                ),
                 const SizedBox(width: 8),
-                if (signedIn) ...[
-                  GestureDetector(
-                    onTap: addExam,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text(
-                        "Add Exam",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
             if (signedIn) ...[
-              Row(
-                children: [
-                  widget._signOutButton(context),
-                  const SizedBox(width: 8),
-                ],
+              TextButton(
+                onPressed: addExam,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Add Exam"),
+                ),
               ),
+              const SizedBox(width: 16),
+            ],
+            Spacer(), // Add this to create space between the options
+            if (signedIn) ...[
+              widget._signOutButton(context),
+              const SizedBox(width: 8),
             ],
             if (!signedIn) ...[
-              Row(
-                children: [
-                  widget._loginButton(context),
-                  const SizedBox(width: 16),
-                  widget._registerButton(context),
-                ],
-              ),
+              widget._loginButton(context),
+              const SizedBox(width: 16),
+              widget._registerButton(context),
             ],
           ],
         ),
