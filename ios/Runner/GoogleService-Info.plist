@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>API_KEY</key>
+	<key>my-google-api-key</key>
 	<string>AIzaSyDtHHeY4pEiCiU9-NGemxDt9Ms4C5Cjfbo</string>
 	<key>GCM_SENDER_ID</key>
 	<string>352465460942</string>
