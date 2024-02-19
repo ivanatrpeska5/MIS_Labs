@@ -4,7 +4,9 @@ import 'package:mis_labs/auth/auth.dart';
 import 'package:mis_labs/page/register_page.dart';
 
 import '../domain/exam.dart';
+import '../domain/location.dart';
 import '../domain/notifications.dart';
+import '../map/google_maps.dart';
 import 'calendar_page.dart';
 import 'login_page.dart';
 
@@ -64,10 +66,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Exam> _exams = [
-    Exam(id: 1, name: "Мобилни Информациски Системи", dateTime: DateTime.now()),
-    Exam(id: 2, name: "Веб Програмирање", dateTime: DateTime.now()),
-    Exam(id: 3, name: "Напредно Програмирање", dateTime: DateTime.now()),
+    Exam(id: 1, name: "Мобилни Информациски Системи", dateTime: DateTime.now(), location: Location.feit),
+    Exam(id: 2, name: "Веб Програмирање", dateTime: DateTime.now(), location: Location.finki),
+    Exam(id: 3, name: "Напредно Програмирање", dateTime: DateTime.now(), location: Location.tmf),
+    Exam(id: 4, name: "Основи на Веб Дизајн", dateTime: DateTime.now(), location: Location.mf),
   ];
+  late Location location;
+  int _selectedLocationIndex = 0;
+  List<Location> locations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    locations = Location.getLocations();
+    location = locations.first;
+  }
 
   void addExam() {
     showDialog(
@@ -75,6 +88,7 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         String newName = "";
         DateTime newDateTime = DateTime.now();
+        Location selectedLocation = Location.getLocations()[0]; // Default location
 
         Future<void> _selectTime() async {
           TimeOfDay? selectedTime = await showTimePicker(
@@ -104,6 +118,22 @@ class _HomePageState extends State<HomePage> {
                   newName = value;
                 },
                 decoration: const InputDecoration(labelText: "Exam Name"),
+              ),
+              const SizedBox(height: 16),
+              DropdownButton<int>(
+                value: _selectedLocationIndex,
+                onChanged: (int? newValue) {
+                  setState(() {
+                    _selectedLocationIndex = newValue ?? 0;
+                    location = locations[_selectedLocationIndex];
+                  });
+                },
+                items: locations.asMap().entries.map<DropdownMenuItem<int>>((entry) {
+                  return DropdownMenuItem<int>(
+                    value: entry.key,
+                    child: Text(entry.value.name),
+                  );
+                }).toList(),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -140,11 +170,12 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  if (newName.isNotEmpty) {
+                  if (newName.isNotEmpty && selectedLocation != null) {
                     final newExam = Exam(
                       id: _exams.length + 1,
                       name: newName,
                       dateTime: newDateTime,
+                      location: location,
                     );
                     _exams.add(newExam);
                     Notifications.sendImmediateNotification(newExam);
@@ -176,6 +207,12 @@ class _HomePageState extends State<HomePage> {
             ),
             Row(
               children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => GoogleMaps(_exams)));
+                    },
+                    child: const Text('Map')),
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacement(
@@ -245,6 +282,12 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "Date: ${_exams[index].dateTime.toLocal()}",
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Location: ${_exams[index].location.name}",
                     ),
                   ),
                 ],
